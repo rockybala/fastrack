@@ -1,7 +1,9 @@
-CC=g++
+CC=clang++ #g++
+
 CFLAGS= -O3 -std=c++11 -fopenmp -mfma -msse2 -c -Wall -Wextra -fPIC #-ffast-math
 
-LDFLAGS += -lgomp -lrt
+#LDFLAGS += -lgomp -lrt
+LDFLAGS +=  -L/usr/local/Cellar/libomp/10.0.0/lib/ -lomp
 
 SOURCES_FFF = AlgorithmParameters.cpp Geometry.cpp LayerLinker.cpp FieldModel.cpp Track.cpp
 SOURCES_FFF += HitBin.cpp HitLayer.cpp HitBank.cpp ClusterMaker.cpp
@@ -17,7 +19,8 @@ pro: $(SOURCES_FFF) $(SOURCE_FFF) $(LIBRARY_FFF)
 
 $(LIBRARY_FFF): $(OBJECTS_FFF)
 	$(CC) $(CFLAGS) -c $(SOURCE_FFF) -o $(OBJECT_FFF)
-	$(CC) $(LDFLAGS) -shared -Wl,-soname,$(LIBRARY_FFF) -o $(LIBRARY_FFF) $(OBJECT_FFF) $(OBJECTS_FFF)
+	$(CC) $(LDFLAGS) -shared -Wl, $(OBJECT_FFF) $(OBJECTS_FFF) -o $(LIBRARY_FFF)
+	#$(CC) $(LDFLAGS) -shared -Wl,-soname,$(LIBRARY_FFF) -o $(LIBRARY_FFF) $(OBJECT_FFF) $(OBJECTS_FFF)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@

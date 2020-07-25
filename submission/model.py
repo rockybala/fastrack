@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 
 from multiprocessing.pool import Pool
 
+from trackml.dataset import load_event
+
 import multiprocessing
 
 import os
@@ -17,8 +19,9 @@ class Model():
     def __init__(self):
         super().__init__()
         
-        dirName = os.path.dirname(__file__)
-        
+        #dirName = os.path.dirname(__file__)
+        dirName = os.path.dirname(os.path.abspath(__file__))
+        print("dirName = ", dirName)
         geomPath = os.path.join(dirName, 'geometry.bin')
         connPath = os.path.join(dirName, 'connections.bin')
         libPath  = os.path.join(dirName, 'libModel.so')
@@ -89,3 +92,13 @@ class Model():
         sub = pd.DataFrame(data=np.column_stack((hits.hit_id.values, labels)), columns=["hit_id", "track_id"]).astype(int)
         sub['event_id'] = event_id
         return sub
+
+
+model = Model()
+
+#hits, cells = load_event('../Dataset/test/event000000000')
+hits, cells = load_event('../Dataset/test/event000000000', parts=['hits', 'cells'])
+output = model.predict_one_event(1, hits, cells)
+
+print(output)
+
